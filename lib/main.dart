@@ -22,6 +22,14 @@ class MainBody extends StatefulWidget {
 
 class _MainBodyState extends State<MainBody> {
   var opacity = 0.6;
+  var devices = {
+    "ac":{
+      'status':true
+    },
+    "light":{
+      "status":false
+    }
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,61 +42,95 @@ class _MainBodyState extends State<MainBody> {
                   ),
                   fit: BoxFit.cover),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TopRow(),
-              RoomName(),
-              Expanded(
-                child: GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Card(
-                        opacity: opacity,
-                        Child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Room Temperature'),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [Center(child: Text("23",style: TextStyle(fontSize: 50),)),
-                                  Image.asset('assets/img/celsius.png',width: 40,)
-                                ],
-                              ),
-                              CupertinoSwitch(
-                                value: true,
-                                onChanged: (value) {
-                                  setState(() {
-
-                                  });
-                                },
-                                //activeTrackColor: ,
-                                trackColor: Colors.red,
-                                activeColor: Color(0xFFFF9B75),
-                              ),
-                            ],
-                          ),
-                        ),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TopRow(),
+                RoomName(),
+                Expanded(
+                  child: GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 2,
+                    children: <Widget>[
+                      Card(
+                        opacity: (devices['ac']['status'])?1:0.6,
+                        Child: AcCard(),
                       ),
-                      onTap: (){
-                        setState(() {
-                          opacity = 1;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              )
-            ],
+                      Card(
+                        opacity: (devices['light']['status'])?1:0.6,
+                        Child: LightCard(),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           )),
+    );
+  }
+
+  Column AcCard() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Room',style: ksubheading.copyWith(color:(devices['ac']['status'])?Colors.black:Colors.grey),),
+        Text('Temperature',style: ksubheading.copyWith(color:(devices['ac']['status'])?Colors.black:Colors.grey),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Center(child: Text("23",style: TextStyle(fontSize: 50),)),
+            Image.asset('assets/img/celsius.png',width: 40,)
+          ],
+        ),
+        CupertinoSwitch(
+          value: devices['ac']['status'],
+          onChanged: (value) {
+            setState(() {
+              if(devices['ac']['status']==true){
+                devices['ac']['status'] = false;
+              }
+              else{
+                devices['ac']['status'] = true;
+              }
+            });
+          },
+          //activeTrackColor: ,
+          trackColor: Colors.red,
+          activeColor: Color(0xFFFF9B75),
+        ),
+      ],
+    );
+  }
+  Column LightCard() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Room',style: ksubheading.copyWith(color:(devices['light']['status'])?Colors.black:Colors.grey),),
+        Text('Lights',style: ksubheading.copyWith(color:(devices['light']['status'])?Colors.black:Colors.grey),),
+        Center(child: Image.asset((devices['light']['status'])?'assets/img/bulbOn.png':'assets/img/bulbOff.png',width: 65,)),
+        CupertinoSwitch(
+          value: devices['light']['status'],
+          onChanged: (value) {
+            setState(() {
+              if(devices['light']['status']==true){
+                devices['light']['status'] = false;
+              }
+              else{
+                devices['light']['status'] = true;
+              }
+            });
+          },
+          //activeTrackColor: ,
+          trackColor: Colors.red,
+          activeColor: Color(0xFFFF9B75),
+        ),
+      ],
     );
   }
 }
@@ -147,10 +189,7 @@ class TopRow extends StatelessWidget {
             children: [
               Text(
                 "Good Morning",
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: ksubheading,
               ),
               Text(
                 "Raghav Gupta",
