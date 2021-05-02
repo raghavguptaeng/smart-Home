@@ -64,6 +64,10 @@ class _MainBodyState extends State<MainBody> {
                         opacity: (devices['light']['status'])?1:0.6,
                         Child: LightCard(),
                       ),
+                      Card(
+                        opacity: 1,
+                        Child: CityTemp(),
+                      )
                     ],
                   ),
                 )
@@ -129,6 +133,23 @@ class _MainBodyState extends State<MainBody> {
           //activeTrackColor: ,
           trackColor: Colors.red,
           activeColor: Color(0xFFFF9B75),
+        ),
+      ],
+    );
+  }
+  Column CityTemp() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Outdoor',style: ksubheading.copyWith(color:(devices['ac']['status'])?Colors.black:Colors.grey),),
+        Text('Temperature',style: ksubheading.copyWith(color:(devices['ac']['status'])?Colors.black:Colors.grey),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Center(child: Text("23",style: TextStyle(fontSize: 50),)),
+            Image.asset('assets/img/celsius.png',width: 40,)
+          ],
         ),
       ],
     );
